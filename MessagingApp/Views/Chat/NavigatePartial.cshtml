@@ -1,0 +1,31 @@
+﻿@model IEnumerable<MessagingApp.Models.Chat>
+
+
+<h2>@ViewBag.CurrentUserName </h2>
+<table class="table">
+
+@foreach (var item in Model.Where(x=>x.SenderId == @ViewBag.CurrentUserName).Select(d=>d.ReceiverId).Distinct()) {
+        <tr>
+            
+            <td class="name" onclick="loadMessage('@item')">
+                @Html.DisplayFor(modelItem => item)
+            </td>
+           
+        </tr>
+}
+
+</table>
+<script>
+
+    function loadMessage(nameVal){
+        console.log(nameVal);
+       
+       
+          $.ajax({                     
+                 url:  "/Chat/Index" ,
+                 data: {name: nameVal} 
+            });
+            debugger;
+    }
+debugger;
+</script>
