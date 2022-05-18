@@ -2,14 +2,27 @@
 
 
 <h2>@ViewBag.CurrentUserName </h2>
+<div>
+
+                    <p>
+                        <a asp-controller="Chat" asp-action="StartNewChat">Start new chat</a>
+                    </p>
+
+                </div>
 <table class="table">
 
-@foreach (var item in Model.Where(x=>x.SenderId == @ViewBag.CurrentUserName).Select(d=>d.ReceiverId).Distinct()) {
+            @foreach (var item in Model.Select(d=>d.ReceiverId).Distinct()) {
         <tr>
-            
-            <td class="name" onclick="loadMessage('@item')">
+            @if(@item == @ViewBag.CurrentUserName)
+            {
+                
+            }
+            else{
+                <td class="name" onclick="loadMessage('@item')">
                 @Html.DisplayFor(modelItem => item)
-            </td>
+            </td>   
+            }
+            
            
         </tr>
 }
@@ -21,11 +34,12 @@
         console.log(nameVal);
        
        
-          $.ajax({                     
-                 url:  "/Chat/Index" ,
-                 data: {name: nameVal} 
+          $.ajax({        
+                 type : "GET",
+                 url:  "/Chat/_chat" ,
+                 data: {"name": nameVal} 
             });
-            debugger;
+            
     }
-debugger;
+
 </script>

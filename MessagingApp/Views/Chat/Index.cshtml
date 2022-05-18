@@ -2,93 +2,30 @@
 @{
     ViewData["Title"] = "Index";
     var userName = User.Identity.Name;
+    var receiver = @ViewBag.CurrentReceiver;
+ 
 }
-<h2 class = "text-center text-primary">
-        <i class="fab fa-facebook-mesenger"></i>&nbsp; Me Chat
-    </h2>
-<script>
-    const userName = "@ViewBag.CurrentUserName";
-    function sendMessage()
-    {
-        var msg = $("#message").val();
-        debugger;
-        $.ajax({    
-                 type: "POST",
-                 url:  "/Chat/Message",
-                 data: {"Message" : msg} ,
                  
-                 
-       
-            });
-         
-    }
-</script>
-<table>
-    <tr>
-        <td>
-            @*@Html.Partial("NavigatePartial",Model)*@
-            <partial name="NavigatePartial" data="@Model"/>
-        </td>
-        <td>
-            <div class = "jumbotron bg-light">
+
+<body>
+  <div class="container">
+    <div class="row">
+
+
+      <section class="discussions">
+          @await Component.InvokeAsync("ReceiversName");
+
     
-    <div class ="row">
-        <div class="col-md-12" id="chat">
-            @if (Model != null)
-            {
-                @foreach(var message in Model.OrderBy(m=>m.CurrentTime))
-                {
-                    string containerClass, timePosition, textAlign, fontColor, offset;
-                    if(userName == message.SenderId)
-                    {
-                        containerClass = "container darker";
-                        timePosition = "time-right text-dark";
-                        textAlign = "text-right text-black";
-                        fontColor = "bg-primary";
-                        offset = "col-md-6 offset-md-6";
-
-                    }
-                    else
-                    {
-                        containerClass = "container";
-                        timePosition = "time-left";
-                        textAlign = "text-left";
-                        fontColor = "bg-light";
-                        offset = "";
-                    }
-                    <div class="row">
-                        <div class="@offset">
-                            <div class="@containerClass" @fontColor>
-                                <p class="sender @textAlign">@message.SenderId </p>
-                                <p class = "@textAlign" >@message.Message</p>
-                                <p class="@timePosition">@message.CurrentTime.ToString("t")</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-        <div class="col-md-12">
-            
-            <form>
-               @* <div class="form-group">*@
-                <input type="text" id="message"/>
-                <input type="button" onclick="sendMessage()" value ="Send" @*id="submitButton"*@ class="btn btn-danger"/>
-
-            @*</div>*@
-
-            </form>
-            
-            <input type="hidden" value="@userName" name="username"/>
-           
-
-        </div>
+      </section>
+      <section class="chat">
+ 
+        <div id="chatHistory"></div>
+        
+      </section>
     </div>
-</div>
+  </div>
+</body>
 
-        </td>
-    </tr>
-</table>
 
 
 

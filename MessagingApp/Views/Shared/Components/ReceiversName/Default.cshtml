@@ -1,0 +1,61 @@
+﻿@model List<string>
+
+<h2> @ViewBag.CurrentUserName</h2>
+
+<div>
+
+                    <p>
+                        <a asp-controller="Chat" asp-action="StartNewChat">Start new chat</a>
+                    </p>
+                    <p>
+                        <a asp-controller="Chat" asp-action = "CreateGroupChat">Create group</a>
+                    </p>
+                    <p>
+                        <a asp-controller="Chat" asp-action = "JoinGroupChat">Join group</a>
+                    </p>
+                </div>
+                  
+                <table class="table">
+
+            @foreach (var item in Model) {
+        <tr>
+            
+                <td class="name" onclick="loadMessage('@item')">
+                
+                <div class="discussion">
+                <div class="desc-contact">
+                <p class="name">@Html.DisplayFor(modelItem => item)</p>
+                </div>
+
+            </div>
+            </td>   
+            
+          
+
+        
+
+       
+
+           
+        </tr>}
+
+
+</table>
+
+<script>
+
+    function loadMessage(nameVal){
+        console.log(nameVal);
+       
+        //$( nameVal ).load( "Url.Action("PartialChatHistory","Chat"), {\"name": nameVal}" );
+        $("#chatHistory").load("/Chat/PartialChatHistory", 
+            { "name": nameVal })
+          //$.ajax({        
+          //       type : "GET",
+          //       url:  "/Chat/_chat" ,
+          //       data: {"name": nameVal} 
+          //  });
+            
+    }
+
+</script>

@@ -4,7 +4,7 @@ namespace MessagingApp.Services
 {
     public class EncrytDecryptService
     {
-        public async Task<string> EncryptAsync(string message)
+        public string EncryptAsync(string message)
         {
             var textToEncrypt = message;
             string toReturn = string.Empty;
@@ -30,7 +30,7 @@ namespace MessagingApp.Services
         }
 
 
-        public async Task<string > DecryptAsync(string text)
+        public string DecryptAsync(string text)
         {
             var textToDecrypt = text;
             string toReturn = "";
@@ -42,8 +42,8 @@ namespace MessagingApp.Services
             publickeybyte = System.Text.Encoding.UTF8.GetBytes(publickey);
             MemoryStream ms = null;
             CryptoStream cs = null;
-            byte[] inputbyteArray = new byte[textToDecrypt.Replace(" ", "+").Length];
-            inputbyteArray = Convert.FromBase64String(textToDecrypt.Replace(" ", "+"));
+             //inputbyteArray = new byte[textToDecrypt.Replace(" ", "+").Length];
+            byte[] inputbyteArray = Convert.FromBase64String(textToDecrypt.Replace(" ", "+"));
             using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
             {
                 ms = new MemoryStream();

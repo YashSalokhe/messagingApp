@@ -1,0 +1,42 @@
+﻿@model IEnumerable<string>
+
+@{
+    ViewData["Title"] = "StartNewChat";
+}
+
+<h1>StartNewChat</h1>
+<script>
+
+function sendUsername(value) {
+    console.log(value)
+    //var msg = $("#message").val();
+    //const form = document.getElementById('messageForm');
+    //event.preventDefault();
+    $.ajax({
+        type: "POST",
+        url: "../Chat/StartNewChat",
+        data: { "UserName": value }
+        
+    })
+
+</script>
+
+<table class="table">
+
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item
+            </td>
+          
+            <td>
+            @Html.ActionLink("say hiiii","StartNewChatWith",new{UserName=@item})
+
+                @*<input type="button" onclick="sendUsername('@item')" value ="Say hiii" class="btn btn-primary"/>*@
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

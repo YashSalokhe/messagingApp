@@ -39,9 +39,10 @@ namespace MessagingApp.Controllers
                 var currentUser = await _userManager.FindByEmailAsync(login.Email);
                 HttpContext.Session.SetString("CurrentUser", currentUser.UserName);
 
-                return RedirectToAction("Index" , "Chat");
+                return RedirectToAction("Index", "Chat");
+               // return View("../Chat/Index");
                 }
-            else
+                else
             {
                 ViewBag.message = authResult;
                 return View(login);

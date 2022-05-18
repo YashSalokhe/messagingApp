@@ -1,39 +1,38 @@
 ﻿@model IEnumerable<MessagingApp.Models.Chat>
 
 @{
-    ViewData["Title"] = "Message";
-    var userName = User.Identity.Name;
+    ViewData["Title"] = "ChatHistory";
+     var userName = User.Identity.Name;
+    var receiver = @ViewBag.CurrentReceiver;
 }
-
-
-
-<script>
-    const userName = "@ViewBag.CurrentUserName";
-    function sendMessage()
-    {
-        var msg = $("#message").val();
-        debugger;
-        $.ajax({    
-                 type: "POST",
-                 url:  "../Chat/Message",
-                 data: {"Message" : msg} ,
-                 
-       
-            });
-
-        
-    }
-</script>
-<div class = "jumbotron jumbotron-fluid">
-    <h2 class = "text-center text-primary">
+<h2>hello @ViewBag.CurrentReceiver @receiver</h2>
+<h2 class = "text-center text-primary">
         <i class="fab fa-facebook-mesenger"></i>&nbsp; Me Chat
     </h2>
-    <div class ="row">
-        <div class="col-md-0" id="chat">
-            @if (Model != null)
-            {
+
+<table>
+    <tr>
+        <td>
+            @*@Html.Partial("NavigatePartial",Model)*@
+            @*<div >
+
+                @if(Model != null){
+                     <partial name="../Chat/ChatHistoryPartial" data="@Model"/>
+                   
+                 
+                   }
+                else{
+               <p>lalalalalalalalalaa</p>
+                    }
+            </div>
+           *@
+
+           <div class="chat" >
+            @*@if (Model!= null)
+            {*@
                 @foreach(var message in Model.OrderBy(m=>m.CurrentTime))
                 {
+                    
                     string containerClass, timePosition, textAlign, fontColor, offset;
                     if(userName == message.SenderId)
                     {
@@ -41,7 +40,7 @@
                         timePosition = "time-right text-dark";
                         textAlign = "text-right text-black";
                         fontColor = "bg-primary";
-                        offset = "col-md-6 offset-md-6";
+                        offset = "col-md-8 offset-md-8";
 
                     }
                     else
@@ -62,9 +61,7 @@
                         </div>
                     </div>
                 }
-            }
-        </div>
-        <div class="col-md-12">
+                 <div class="row">
             
             <form>
                @* <div class="form-group">*@
@@ -78,56 +75,27 @@
             <input type="hidden" value="@userName" name="username"/>
            
 
+                    </div>
+                @*}
+                else
+                {
+                    <p>asdasfasfasfas</p>
+                }*@
         </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*
-
-<h1>Message</h1>
-
-<h4>Chat</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Message">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-          
-            <div class="form-group">
-                <label asp-for="Message" class="control-label"></label>
-                <input asp-for="Message" class="form-control" />
-                <span asp-validation-for="Message" class="text-danger"></span>
-            </div>
+       
+    
            
-            <div class="form-group">
-                <input type ="text" name = "receiverEmail" class="text-danger"/>
+            
+        </td>
+        <td>
+            
+              <div class="side-menu">
+
+                @*<partial name="NavigatePartial" data="@Model"/>*@
+                @await Component.InvokeAsync("ReceiversName");
             </div>
-            <div class="form-group">
-                <input type="submit" value="send" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-*@
+          
 
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+        </td>
+    </tr>
+</table>

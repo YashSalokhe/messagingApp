@@ -4,7 +4,7 @@
 }
 
 
-<h1>@ViewData["Title"]</h1>
+@*<h1>@ViewData["Title"]</h1>
 <h2>@ViewBag.message</h2>
 <div class="row">
     <div class="col-md-4">
@@ -49,5 +49,71 @@
             </form>
         </section>
     </div>
-    </div>
+    </div>*@
 
+
+    
+    <section class="vh-100">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6 text-black">
+
+        <div class="px-5 ms-xl-4">
+          <i class="fas fa-crow fa-2x me-3 pt-5 mt-xl-4" style="color: #709085;"></i>
+          <span class="h1 fw-bold mb-0">Logo</span>
+        </div>
+
+        <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+
+          <form asp-action="Login" style="width: 23rem;" >
+              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
+
+             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-outline mb-4">
+                    <input asp-for="Email" class="form-control form-control-lg" placeholder=Email autocomplete="username" aria-required="true" />
+                    <label asp-for="Email" class="form-label"></label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-outline mb-4">
+                    <input asp-for="Password"  class="form-control form-control-lg" placeholder=Password id = "myInput" autocomplete="current-password" aria-required="true" type = "password"/>
+                    <label asp-for="Password" class="form-label"></label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <input type="checkbox" onclick="myFunction()">Show Password
+                    <script>
+                    function myFunction() {
+                    var x = document.getElementById("myInput");
+                    if (x.type === "password") {
+                          x.type = "text";
+                       } else {
+                          x.type = "password";
+                       }
+                       }
+                    </script>
+
+            <div class="pt-1 mb-4">
+                    <button id="login-submit" type="submit" class="btn btn-info btn-lg btn-block">Log in</button>
+                </div>
+                <div>
+
+                    <p>
+                        <a asp-action="Register" class="link-info">Register as a new user</a>
+                    </p>
+
+                </div>
+
+          </form>
+
+        </div>
+
+      </div>
+      <div class="col-sm-6 px-0 d-none d-sm-block">
+      @*  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp"*@
+      <img  src="http://store-images.s-microsoft.com/image/apps.50658.13510798887582160.6841e217-ba88-46a8-b86f-25901f3e73f7.3333b2d3-027b-455e-92b9-1a2569913b51"    
+      alt="Login image" class="w-100 vh-100" style="object-fit:cover; object-position: left;"/>
+
+      </div>
+    </div>
+  </div>
+</section>

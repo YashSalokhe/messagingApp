@@ -17,6 +17,7 @@ namespace MessagingApp.Models
         }
 
         public virtual DbSet<Chat> Chats { get; set; } = null!;
+        public virtual DbSet<Group> Groups { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,6 +40,11 @@ namespace MessagingApp.Models
                     .HasColumnType("datetime")
                     .HasColumnName("currentTime");
 
+                entity.Property(e => e.GroupName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("groupName");
+
                 entity.Property(e => e.Message)
                     .IsUnicode(false)
                     .HasColumnName("message");
@@ -52,6 +58,19 @@ namespace MessagingApp.Models
                     .HasMaxLength(150)
                     .IsUnicode(false)
                     .HasColumnName("senderId");
+            });
+
+            modelBuilder.Entity<Group>(entity =>
+            {
+                entity.Property(e => e.GroupName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("groupName");
+
+                entity.Property(e => e.UserName)
+                    .HasMaxLength(150)
+                    .IsUnicode(false)
+                    .HasColumnName("userName");
             });
 
             OnModelCreatingPartial(modelBuilder);

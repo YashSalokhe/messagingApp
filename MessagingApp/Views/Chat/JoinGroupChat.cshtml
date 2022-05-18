@@ -1,0 +1,34 @@
+﻿@model IEnumerable<string>
+
+@{
+    ViewData["Title"] = "JoinGroupChat";
+}
+
+<h1>JoinGroupChat</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                GroupName
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item
+            </td>
+
+            <td>
+                 @Html.ActionLink("Join Group","JoinGroupChatWith",new{groupName=@item})
+               
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

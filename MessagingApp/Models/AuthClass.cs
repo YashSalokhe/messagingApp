@@ -6,14 +6,17 @@ namespace MessagingApp.Models
     {
         public class Login
         {
+            [Required]
             public string Email { get; set; }
-
+            [Required]
             public string Password { get; set; }
         }
 
         public class Register
         {
+            [Required]
             public string UserName { get; set; }
+            [Required]
             public string Email { get; set; }
             [Required(ErrorMessage = "Password is Required")]
             [RegularExpression("^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$",

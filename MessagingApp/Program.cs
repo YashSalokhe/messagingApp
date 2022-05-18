@@ -23,8 +23,11 @@ builder.Services.AddSession(options => {
 builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<MessageAppSecurityContext>().AddDefaultUI();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<EncrytDecryptService>();
+builder.Services.AddScoped<MessageService>();
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
+//builder.Services.AddAuthentication();
+//builder.Services.AddAuthorization();
 
 
 
@@ -46,7 +49,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseSession();
 app.UseAuthorization();
-app.MapHub<ChatHub>("/Chat/Index");
+app.MapHub<ChatHub>("/chatHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
