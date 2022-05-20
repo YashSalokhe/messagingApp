@@ -1,6 +1,4 @@
-﻿
-
-namespace MessagingApp.Services
+﻿namespace MessagingApp.Services
 {
     public class EncrytDecryptService
     {
@@ -9,18 +7,17 @@ namespace MessagingApp.Services
             var textToEncrypt = message;
             string toReturn = string.Empty;
             string publicKey = "12345678";
-            string secretKey = "87654321";
-            byte[] secretkeyByte;
-            secretkeyByte = System.Text.Encoding.UTF8.GetBytes(secretKey);
-            byte[] publickeybyte ;
-            publickeybyte = System.Text.Encoding.UTF8.GetBytes(publicKey);
-            MemoryStream ms = null;
-            CryptoStream cs = null;
+            string IV = "87654321";
+
+            byte[] secretkeyByte = System.Text.Encoding.UTF8.GetBytes(IV);
+           
+            byte[] publickeybyte = System.Text.Encoding.UTF8.GetBytes(publicKey);
+
             byte[] inputbyteArray = System.Text.Encoding.UTF8.GetBytes(textToEncrypt);
-            using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
+            using (DES des =DES.Create())
             {
-                ms = new MemoryStream();
-                cs = new CryptoStream(ms, des.CreateEncryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
+                MemoryStream ms = new MemoryStream();
+                CryptoStream cs = new CryptoStream(ms, des.CreateEncryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
                 cs.Write(inputbyteArray, 0, inputbyteArray.Length);
                 cs.FlushFinalBlock();
                 toReturn = Convert.ToBase64String(ms.ToArray());
@@ -35,19 +32,17 @@ namespace MessagingApp.Services
             var textToDecrypt = text;
             string toReturn = "";
             string publickey = "12345678";
-            string secretkey = "87654321";
-            byte[] privatekeyByte = { };
-            privatekeyByte = System.Text.Encoding.UTF8.GetBytes(secretkey);
-            byte[] publickeybyte = { };
-            publickeybyte = System.Text.Encoding.UTF8.GetBytes(publickey);
-            MemoryStream ms = null;
-            CryptoStream cs = null;
-             //inputbyteArray = new byte[textToDecrypt.Replace(" ", "+").Length];
+            string IV = "87654321";
+          
+            byte[] privatekeyByte = System.Text.Encoding.UTF8.GetBytes(IV);
+
+            byte[] publickeybyte = System.Text.Encoding.UTF8.GetBytes(publickey);
+
             byte[] inputbyteArray = Convert.FromBase64String(textToDecrypt.Replace(" ", "+"));
-            using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
+            using (DES des = DES.Create())
             {
-                ms = new MemoryStream();
-                cs = new CryptoStream(ms, des.CreateDecryptor(publickeybyte, privatekeyByte), CryptoStreamMode.Write);
+                MemoryStream ms = new MemoryStream();
+                CryptoStream cs = new CryptoStream(ms, des.CreateDecryptor(publickeybyte, privatekeyByte), CryptoStreamMode.Write);
                 cs.Write(inputbyteArray, 0, inputbyteArray.Length);
                 cs.FlushFinalBlock();
                 Encoding encoding = Encoding.UTF8;

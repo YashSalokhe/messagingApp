@@ -40,11 +40,6 @@ namespace MessagingApp.Models
                     .HasColumnType("datetime")
                     .HasColumnName("currentTime");
 
-                entity.Property(e => e.GroupName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("groupName");
-
                 entity.Property(e => e.Message)
                     .IsUnicode(false)
                     .HasColumnName("message");

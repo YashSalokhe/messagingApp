@@ -67,6 +67,7 @@ body {
     overflow: hidden;
     background-color: #87a3ec;
     display: inline-block;
+    overflow:scroll
 }
 
     .discussions .discussion {
@@ -189,6 +190,8 @@ body {
 
 .chat {
     width: calc(65% - 85px);
+    height:700px;
+    overflow:scroll;
 }
 
 .header-chat {
@@ -220,32 +223,14 @@ body {
 
 .chat .messages-chat {
     padding: 25px 35px;
+    containerClass = "container";
+    timePosition = "time-left";
+    textAlign = "text-left";
+    fontColor = "bg-light";
+    offset = "";
 }
 
-    .chat .messages-chat .message {
-        display: flex;
-        align-items: center;
-        margin-bottom: 8px;
-    }
 
-        .chat .messages-chat .message .photo {
-            display: block;
-            width: 45px;
-            height: 45px;
-            background: #E6E7ED;
-            -moz-border-radius: 50px;
-            -webkit-border-radius: 50px;
-            background-position: center;
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
-
-    .chat .messages-chat .text {
-        margin: 0 35px;
-        background-color: #f6f6f6;
-        padding: 15px;
-        border-radius: 12px;
-    }
 
 .text-only {
     margin-left: 45px;
@@ -264,9 +249,11 @@ body {
 }
 
 .response {
-    float: right;
-    margin-right: 0px !important;
-    margin-left: auto; /* flexbox alignment rule */
+    containerClass = "container darker";
+    timePosition = "time-right text-dark";
+    textAlign = "text-right text-black";
+    fontColor = "bg-primary";
+    offset = "col-md-8 offset-md-8";
 }
 
     .response .text {

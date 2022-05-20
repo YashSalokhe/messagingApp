@@ -11,7 +11,7 @@
           <p class="name">@reciever</p>
           @*<i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>*@
         </div>
-        <div class="chat" >
+        <div @*class="chat"*@ >
             @if (Model != null)
             {
                 
@@ -37,19 +37,29 @@
                         offset = "";
                         
                     }
-                    <div class="row">
+                    <div class="message-append" >
                         <div class="@offset">
-                            <div class="@containerClass" @fontColor>
+                            <div  class="@containerClass" @fontColor >
                                 <p class="sender @textAlign">@message.SenderId </p>
                                 <p class = "@textAlign" >@message.Message</p>
                                 <p class="@timePosition">@message.CurrentTime.ToString("t")</p>
                             </div>
                         </div>
                     </div>
+                
+                   @* <div class = "message">
+                        <header>@message.SenderId</header>
+                        <p>@message.Message</p>
+                        <footer>@message.CurrentTime</footer>
+
+                    </div>*@
+                   
+
+
                 }
             }
         </div>
-        <div class="row">
+        <div class="footer">
             
             <form id="messageForm">
                @* <div class="form-group">*@
@@ -61,7 +71,8 @@
             @*</div>*@
 
             </form>
-            
+
+           
             <input type="hidden" value="@userName" name="username"/>
            
 
@@ -70,31 +81,48 @@
  <script src="~/js/signalr/signalr.js"></script>
  <script src="~/js/signalr/signalrClient.js"></script>
  <script>
+     
+
+
      var connection = new signalR.HubConnectionBuilder().withUrl("chatHub").build();
 
 var _connectionId = '';
-connection.on("RecieveMessage", function (data) {
+    connection.on("RecieveMessage", function (data) {
+
+
     console.log("this is recieved data - ", data);
     console.log(data.senderId);
-    var message = document.createElement("div")
-    message.classList.add('row')
+
+    
 
 
+    console.log(data.message)
+    console.log(message)
     var senderId = document.createElement("p")
-    senderId.appendChild(document.createTextNode(data.SenderId))
-    var msg = document.createElement("p")
-    msg.appendChild(document.createTextNode(data.Message))
-    var time = document.createElement("p")
-    time.appendChild(document.createTextNode(data.CurrentTime))
 
+    console.log(senderId)
+    senderId.appendChild(document.createTextNode(data.senderId))
+   
+    var msg = document.createElement("p")
+    vmsg.appendChild(document.createTextNode(data.message))
+    
+    var time = document.createElement("p")
+    time.appendChild(document.createTextNode(data.currentTime))
+    
     message.appendChild(senderId);
     message.appendChild(msg);
     message.appendChild(time);
+    console.log(message)
 
+    var parent = document.getElementsByClassName("message-append");
+    parent.appendChild(message);
+    console.log(parent)
 
-    var body = document.querySelector('.chat')
+    console.log(message)
+
+    var body = document.querySelector('message-append')/*$('message-append').append(message)*/
     body.append(message);
-    debugger;
+  
 });
 
 function sendMessage(event) {

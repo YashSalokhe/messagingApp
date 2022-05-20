@@ -13,7 +13,7 @@ namespace MessagingApp.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var currentUser = HttpContext.Session.GetString("CurrentUser");
+            var currentUser = HttpContext.Session.GetString("currentUser");
             var chats = await chatContext.Chats.ToListAsync();
             var groups = await chatContext.Groups.ToListAsync();
             var particularGroups = groups.Where(x => x.UserName == currentUser).Select(x => x.GroupName).Distinct();

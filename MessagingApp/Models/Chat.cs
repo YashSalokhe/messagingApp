@@ -10,6 +10,5 @@ namespace MessagingApp.Models
         public string Message { get; set; } = null!;
         public DateTime CurrentTime { get; set; }
         public string ReceiverId { get; set; } = null!;
-        public string? GroupName { get; set; }
     }
 }

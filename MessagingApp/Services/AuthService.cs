@@ -5,45 +5,50 @@ namespace MessagingApp.Services
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-       // private readonly HttpContext _httpContext;
-  
+        private readonly IHttpContextAccessor http;
 
-        public AuthService(SignInManager<IdentityUser> signInManager , UserManager<IdentityUser> userManager)
+
+
+        public AuthService(SignInManager<IdentityUser> signInManager , UserManager<IdentityUser> userManager, IHttpContextAccessor http)
         {
             this._signInManager = signInManager;
             this._userManager = userManager;
-            //  this._httpContext = _httpContext;
-            //, HttpContext _httpContext
+            this.http = http;
 
         }
-        //<IdentityResult>
-        public async Task<IdentityResult> RegisterUser(Register register)
+
+        public async Task<IdentityResult> RegisterUserAsync(Register register)
         {
-            string temp = string.Empty;
             var registerNewUser = new IdentityUser() { UserName = register.UserName, Email = register.Email };
-            // Create User
-            var result = await _userManager.CreateAsync(registerNewUser, register.Password);
-           
+            var result = await _userManager.CreateAsync(registerNewUser, register.Password);           
             return result;
         }
 
-        public async Task<string> LoginUser(Login login)
+        public async Task<string> LoginUserAsync(Login login)
         {
-            string loginResult = "Success";
+            string loginResult = string.Empty;
             var user = await _userManager.FindByEmailAsync(login.Email);
-            var allUser =  _userManager.Options.User.ToString();
+
             if(user == null)
             {
                 loginResult = "Invalid Email";
                 return loginResult;
             }
-            //_httpContext.Session.SetString("CurrentUser", user.UserName);
             var result = await _signInManager.PasswordSignInAsync(user.UserName, login.Password, false, lockoutOnFailure: true);
             if (!result.Succeeded)
             {
                 loginResult = "Invalid Password";
+                return loginResult;
             }
-            return loginResult;
+            else
+            {
+                loginResult = "Success";
+                http.HttpContext.Session.SetString("currentUser", user.UserName);
+                return loginResult;
+            }
+            
         } 
+
+
     }
 }
