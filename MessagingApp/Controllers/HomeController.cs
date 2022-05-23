@@ -1,9 +1,11 @@
 ﻿using MessagingApp.Models;
+
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace MessagingApp.Controllers
 {
+ 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

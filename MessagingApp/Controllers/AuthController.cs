@@ -5,22 +5,22 @@ namespace MessagingApp.Controllers
     public class AuthController : Controller
     {
         private readonly AuthService _authService;
-         private readonly UserManager<IdentityUser> _userManager;
         
-        public AuthController(AuthService authService, UserManager<IdentityUser> _userManager)
+        
+        public AuthController(AuthService authService)
         {
             this._authService = authService;
-            this._userManager = _userManager;
+           
         }
-        public IActionResult Index()
+        public ViewResult Index()
         {
             return View();
         }
 
-        public IActionResult Login()
+        public ViewResult Login()
         {
-            var login = new Login();
-            return View(login);
+           
+            return View();
         }
 
         [HttpPost]
@@ -31,7 +31,7 @@ namespace MessagingApp.Controllers
                 return RedirectToAction("Register");
             }
            
-                var authResult = await _authService.LoginUserAsync(login);
+                string authResult = await _authService.LoginUserAsync(login);
                 if(authResult == "Success")
                 {
                
@@ -44,7 +44,7 @@ namespace MessagingApp.Controllers
                 }    
         }
 
-        public IActionResult Register()
+        public ViewResult Register()
         {
             return View();
         }

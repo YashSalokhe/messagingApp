@@ -1,28 +1,25 @@
 ﻿using MessagingApp.Hubs;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace MessagingApp.Controllers
 {
-   [Authorize]
+
     public class ChatController : Controller
     {
         private readonly MessageService messageService;
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly ChatHistorydbContext chatContext;
         private readonly EncrytDecryptService cipher;
         private readonly IHubContext<ChatHub> chathub;
 
-        public ChatController(UserManager<IdentityUser> _userManager, ChatHistorydbContext chatContext, EncrytDecryptService cipher, MessageService messageService, IHubContext<ChatHub> chathub)
-        {
-            this._userManager = _userManager;
+        public ChatController( ChatHistorydbContext chatContext, EncrytDecryptService cipher, MessageService messageService, IHubContext<ChatHub> chathub)
+        {    
             this.chatContext = chatContext;
             this.cipher = cipher;
             this.messageService = messageService;
             this.chathub = chathub;
         }
-        public IActionResult Index()
+        public ViewResult Index()
         {
             return View("Index");
         }
@@ -30,27 +27,25 @@ namespace MessagingApp.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Message(string Message )
+        public async Task<OkObjectResult> Message(string Message )
         {
-           
-            var chat = await messageService.sendMessage(Message);
+            var chat = await messageService.sendMessageAsync(Message);
             chat.Message = cipher.DecryptAsync(chat.Message);
             await chathub.Clients.All.SendAsync("RecieveMessage", chat);
             return Ok(chat);
-
         }
 
-        public async Task<IActionResult> StartNewChat()
+        public async Task<ViewResult> StartNewChat()
         {
-            var newPeoples = await messageService.NewPeopleToChat();
+            var newPeoples = await messageService.NewPeopleToChatAsync();
             return View(newPeoples);
         }
         
 
-        public async Task<IActionResult> StartNewChatWith(string UserName)
+        public async Task<RedirectToActionResult> StartNewChatWith(string UserName)
         {
             HttpContext.Session.SetString("currentReceiver", UserName);
-            await messageService.sendMessage("hii");
+            await messageService.sendMessageAsync("hii");
             return RedirectToAction("Index");
         }
 
@@ -59,30 +54,30 @@ namespace MessagingApp.Controllers
         public async Task<PartialViewResult> PartialChatHistory(string name)
         {
             ViewBag.CurrentReceiver =name;
-            var particularChats = await messageService.Chats(name);
+            var particularChats = await messageService.ReadChatsAsync(name);
             return PartialView("ChatHistoryPartial",particularChats);
         }
 
      
-        public IActionResult CreateGroupChat()
+        public ViewResult CreateGroupChat()
         {
             return View();
         }
 
         [HttpPost]
-        public  async Task<IActionResult> CreateGroupChat(string groupName)
+        public  async Task<RedirectToActionResult> CreateGroupChat(string groupName)
         {
             await messageService.CreateOrJoinGroupAsync(groupName);
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> JoinGroupChat()
+        public async Task<ViewResult> JoinGroupChat()
         {
-            var newGroups = await messageService.NewGroupsToJoin();
+            var newGroups = await messageService.NewGroupsToJoinAsync();
             return View(newGroups);
         }
 
-        public async Task<IActionResult> JoinGroupChatWith(string groupName)
+        public async Task<RedirectToActionResult> JoinGroupChatWith(string groupName)
         {
             await messageService.CreateOrJoinGroupAsync(groupName);
             return RedirectToAction("Index");

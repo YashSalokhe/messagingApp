@@ -15,33 +15,33 @@
             this.http = http;
         }
 
-        public async Task<IEnumerable<Chat>> Chats(string receiver)
+        public async Task<IEnumerable<Chat>> ReadChatsAsync(string receiver)
         {
             IEnumerable<Chat> particularChats = new List<Chat>();
             string currentUserName = http.HttpContext.Session.GetString("currentUser");
             http.HttpContext.Session.SetString("currentReceiver", receiver);
-            var allChat = await chatContext.Chats.ToListAsync();
+            var allChats = await chatContext.Chats.ToListAsync();
 
             var users = _userManager.Users.Where(x => x.UserName != currentUserName).Select(x => x.UserName);
             if (users.Contains(receiver))
             {
-                particularChats = allChat.Where(d => d.SenderId == currentUserName || d.ReceiverId == currentUserName).Where(m => m.ReceiverId == receiver || m.SenderId == receiver);    
+                particularChats = allChats.Where(d => d.SenderId == currentUserName || d.ReceiverId == currentUserName).Where(m => m.ReceiverId == receiver || m.SenderId == receiver);    
                       
             }
             else
             {
-                particularChats = allChat.Where(m => m.ReceiverId == receiver);
+                particularChats = allChats.Where(m => m.ReceiverId == receiver);
             }
             foreach (var message in particularChats)
             {
-                var decrypt = cipher.DecryptAsync(message.Message);
+                string decrypt = cipher.DecryptAsync(message.Message);
                 message.Message = decrypt;
             }
-            return particularChats.ToList();
+            return particularChats;
         }
 
 
-        public async Task<Chat> sendMessage(string message)
+        public async Task<Chat> sendMessageAsync(string message)
         {
             Chat chat = new Chat();
 
@@ -51,7 +51,7 @@
             string receiver = http.HttpContext.Session.GetString("currentReceiver");
             chat.ReceiverId = receiver;
 
-            var encryptedMessage = cipher.EncryptAsync(message);
+            string encryptedMessage = cipher.EncryptAsync(message);
             chat.Message = encryptedMessage;
 
             chat.CurrentTime = DateTime.Now;
@@ -77,47 +77,33 @@
 
         }
 
-        public async Task<IEnumerable<string?>> NewGroupsToJoin()
+        public async Task<IEnumerable<string?>> NewGroupsToJoinAsync()
         {
             string currentUser = http.HttpContext.Session.GetString("currentUser");
             var allGroups = await chatContext.Groups.ToListAsync();
-            var groups = allGroups.Where(x => x.UserName == currentUser).Select(x => x.GroupName).Distinct();//.ToListAsync();//.ToListAsync();  //Select(x => x.GroupName).Distinct().ToListAsync();
+            var groups = allGroups.Where(x => x.UserName == currentUser).Select(x => x.GroupName);
             var newGroups = allGroups.Select(x => x.GroupName).Except(groups);
 
             return newGroups;
         }
 
-        public async Task<IEnumerable<string>> NewPeopleToChat()
+        public async Task<IEnumerable<string?>> NewPeopleToChatAsync()
         {
             string currentUserName = http.HttpContext.Session.GetString("currentUser");
             var users = await _userManager.Users.Where(x => x.UserName != currentUserName).Select(x => x.UserName).ToListAsync();
-            var peopleHeSentChatsTo = await chatContext.Chats.Where(c => c.SenderId == currentUserName).Select(x => x.ReceiverId).Distinct().ToListAsync();
-           // var peopleHeSentChatsTo = users.Except(allChatHeSendsTo);
-            var peopleHeRecievedChatsFrom = await chatContext.Chats.Where(c => c.ReceiverId == currentUserName).Select(x => x.SenderId).Distinct().ToListAsync();
-            List<string> newPeople = new List<string>();
+            var chats = await chatContext.Chats.ToListAsync();
 
-            newPeople = peopleHeSentChatsTo.Union(peopleHeRecievedChatsFrom).ToList();
-            var allChatHeSendsTo = users.Except(newPeople);
-            //foreach (var people in peopleHeChatsWith)
-            //{
+            var peopleHeSentChatsTo =chats.Where(c => c.SenderId == currentUserName).Select(x => x.ReceiverId).Distinct();
+          
+            var peopleHeRecievedChatsFrom =chats.Where(c => c.ReceiverId == currentUserName).Select(x => x.SenderId).Distinct();
+            
+            IEnumerable<string> newPeople = new List<string>();
 
-            //    if (!newPeople.Contains(people.SenderId) || !newPeople.Contains(people.ReceiverId))
-            //    {   
+            peopleHeSentChatsTo = peopleHeSentChatsTo.Union(peopleHeRecievedChatsFrom).ToList();
+            newPeople = users.Except(peopleHeSentChatsTo);
+            
 
-            //        if (people.SenderId != currentUserName)
-            //        {
-            //            newPeople.Add(people.SenderId);
-            //        }
-            //        if(people.ReceiverId != currentUserName)
-            //        {
-            //            newPeople.Add(people.ReceiverId);
-            //        }
-            //    }
-
-            //}
-
-
-            return allChatHeSendsTo;
+            return newPeople;
         }
     }
 }

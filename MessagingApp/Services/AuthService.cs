@@ -14,7 +14,6 @@ namespace MessagingApp.Services
             this._signInManager = signInManager;
             this._userManager = userManager;
             this.http = http;
-
         }
 
         public async Task<IdentityResult> RegisterUserAsync(Register register)
@@ -34,6 +33,7 @@ namespace MessagingApp.Services
                 loginResult = "Invalid Email";
                 return loginResult;
             }
+            
             var result = await _signInManager.PasswordSignInAsync(user.UserName, login.Password, false, lockoutOnFailure: true);
             if (!result.Succeeded)
             {

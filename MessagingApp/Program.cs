@@ -26,8 +26,7 @@ builder.Services.AddScoped<EncrytDecryptService>();
 builder.Services.AddScoped<MessageService>();
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
-//builder.Services.AddAuthentication();
-//builder.Services.AddAuthorization();
+
 
 
 
@@ -47,8 +46,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseSession();
 app.UseAuthorization();
+app.UseSession();
+
 app.MapHub<ChatHub>("/chatHub");
 app.MapControllerRoute(
     name: "default",
